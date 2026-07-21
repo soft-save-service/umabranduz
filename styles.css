@@ -183,6 +183,11 @@
 
 .hero .lightbtn{color:var(--ink)}
 
+/* Homepage video: silent looping background with the existing editorial overlay. */
+.hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:0}
+.hero .shade{z-index:1}
+.hero .herotxt,.hero .index{z-index:2}
+
 /* Editorial shop menu */
 .drawer.shop-drawer{width:min(1020px,80vw);padding:0;overflow:hidden}
 .shopmenu-top{height:76px;width:50%;display:flex;align-items:center;gap:54px;padding:0 34px;border-bottom:1px solid var(--ink)}
