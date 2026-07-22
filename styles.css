@@ -1098,7 +1098,7 @@ details.accordion>p{margin:0 0 18px;line-height:1.6}
 }
 
 /* The silhouette and its active measuring line animate together on selection. */
-.size-finder .body-guide{overflow:visible;transition:background-size .48s cubic-bezier(.22,.85,.28,1),background-position .48s cubic-bezier(.22,.85,.28,1)}
+.size-finder .body-guide{overflow:visible;transition:transform .48s cubic-bezier(.22,.85,.28,1),background-size .48s cubic-bezier(.22,.85,.28,1),background-position .48s cubic-bezier(.22,.85,.28,1)}
 .size-finder .finder-shape-step:has(.finder-choices button:nth-child(1).active) .body-guide-waist{background-size:auto 84%}
 .size-finder .finder-shape-step:has(.finder-choices button:nth-child(2).active) .body-guide-waist{background-size:auto 100%}
 .size-finder .finder-shape-step:has(.finder-choices button:nth-child(3).active) .body-guide-waist{background-size:auto 121%}
@@ -1108,6 +1108,17 @@ details.accordion>p{margin:0 0 18px;line-height:1.6}
 .size-finder .finder-shape-step:has(.finder-choices button:nth-child(1).active) .body-guide-legs{background-size:auto 76%;background-position:center top}
 .size-finder .finder-shape-step:has(.finder-choices button:nth-child(2).active) .body-guide-legs{background-size:auto 92%;background-position:center top}
 .size-finder .finder-shape-step:has(.finder-choices button:nth-child(3).active) .body-guide-legs{background-size:auto 108%;background-position:center top}
+
+/* Explicit mobile transforms: works even in browsers that do not animate background-size reliably. */
+.size-finder .finder-shape-step:has(.finder-choices button:nth-child(1).active) .body-guide-waist{transform:scaleX(.74)!important}
+.size-finder .finder-shape-step:has(.finder-choices button:nth-child(2).active) .body-guide-waist{transform:scaleX(1)!important}
+.size-finder .finder-shape-step:has(.finder-choices button:nth-child(3).active) .body-guide-waist{transform:scaleX(1.27)!important}
+.size-finder .finder-shape-step:has(.finder-choices button:nth-child(1).active) .body-guide-hips{transform:scaleX(.74)!important}
+.size-finder .finder-shape-step:has(.finder-choices button:nth-child(2).active) .body-guide-hips{transform:scaleX(1)!important}
+.size-finder .finder-shape-step:has(.finder-choices button:nth-child(3).active) .body-guide-hips{transform:scaleX(1.28)!important}
+.size-finder .finder-shape-step:has(.finder-choices button:nth-child(1).active) .body-guide-legs{transform:scaleY(.76)!important;transform-origin:center top}
+.size-finder .finder-shape-step:has(.finder-choices button:nth-child(2).active) .body-guide-legs{transform:scaleY(.94)!important;transform-origin:center top}
+.size-finder .finder-shape-step:has(.finder-choices button:nth-child(3).active) .body-guide-legs{transform:scaleY(1.08)!important;transform-origin:center top}
 
 @media(max-width:800px){
   .social-contact nav{gap:14px}
