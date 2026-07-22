@@ -1149,8 +1149,7 @@ details.accordion>p{margin:0 0 18px;line-height:1.6}
 .finder-bra-step{text-align:left}
 .finder-bra-step>small,.finder-bra-step>h2,.finder-bra-step>p{text-align:center}
 .bra-system{display:flex;align-items:center;height:60px;margin:4px 0 30px;padding:0 16px;border:1px solid var(--hairline);border-radius:13px;background:#fbfbfd;font:500 16px var(--ui)}
-.bra-system span{flex:1}
-.bra-system select{border:0;background:transparent;color:transparent;width:24px;outline:0;cursor:pointer}
+.bra-system select{width:100%;border:0;background:transparent;color:var(--ink);outline:0;cursor:pointer;font:500 16px var(--ui)}
 .bra-sizes{display:grid;grid-template-columns:1fr 1fr;gap:28px}
 .bra-sizes>div>b{display:block;margin-bottom:12px;font:600 13px var(--ui)}
 .bra-sizes>div>div{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
@@ -1171,9 +1170,9 @@ details.accordion>p{margin:0 0 18px;line-height:1.6}
 .finder-fit-step .finder-actions{margin-top:24px}
 /* Shoulder step uses the supplied body-guide style; its width reacts to the selected option. */
 .size-finder .finder-shape-step:has(.body-guide-shoulders) .finder-choices button:nth-child(1).active~*{}
-.size-finder .finder-shape-step:has(.finder-choices button:nth-child(1).active) .body-guide-shoulders{background-size:auto 84%;animation:guide-in-slim .36s ease both}
-.size-finder .finder-shape-step:has(.finder-choices button:nth-child(2).active) .body-guide-shoulders{background-size:auto 100%;animation:guide-in-average .36s ease both}
-.size-finder .finder-shape-step:has(.finder-choices button:nth-child(3).active) .body-guide-shoulders{background-size:auto 116%;animation:guide-in-wide .36s ease both}
+.size-finder .finder-shape-step:has(.finder-choices button:nth-child(1).active) .body-guide-shoulders{background-image:url('/assets/ui/size-shoulders-slim.png')!important;background-size:contain!important;background-position:center!important;transform:none!important;animation:guide-in-slim .36s ease both}
+.size-finder .finder-shape-step:has(.finder-choices button:nth-child(2).active) .body-guide-shoulders{background-image:url('/assets/ui/size-shoulders-average.png')!important;background-size:contain!important;background-position:center!important;transform:none!important;animation:guide-in-average .36s ease both}
+.size-finder .finder-shape-step:has(.finder-choices button:nth-child(3).active) .body-guide-shoulders{background-image:url('/assets/ui/size-shoulders-wide.png')!important;background-size:contain!important;background-position:center!important;transform:none!important;animation:guide-in-wide .36s ease both}
 @media(max-width:600px){
   .bra-system{height:54px;margin-bottom:22px}
   .bra-sizes{gap:16px}
