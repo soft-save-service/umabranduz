@@ -1096,3 +1096,21 @@ details.accordion>p{margin:0 0 18px;line-height:1.6}
 @media(max-width:700px){
   .history-products{grid-auto-columns:minmax(205px,78vw);padding-bottom:16px}
 }
+
+/* The silhouette and its active measuring line animate together on selection. */
+.size-finder .body-guide{overflow:visible;transition:background-size .48s cubic-bezier(.22,.85,.28,1),background-position .48s cubic-bezier(.22,.85,.28,1)}
+.size-finder .finder-shape-step:has(.finder-choices button:nth-child(1).active) .body-guide-waist{background-size:auto 84%}
+.size-finder .finder-shape-step:has(.finder-choices button:nth-child(2).active) .body-guide-waist{background-size:auto 100%}
+.size-finder .finder-shape-step:has(.finder-choices button:nth-child(3).active) .body-guide-waist{background-size:auto 121%}
+.size-finder .finder-shape-step:has(.finder-choices button:nth-child(1).active) .body-guide-hips{background-size:auto 82%}
+.size-finder .finder-shape-step:has(.finder-choices button:nth-child(2).active) .body-guide-hips{background-size:auto 100%}
+.size-finder .finder-shape-step:has(.finder-choices button:nth-child(3).active) .body-guide-hips{background-size:auto 122%}
+.size-finder .finder-shape-step:has(.finder-choices button:nth-child(1).active) .body-guide-legs{background-size:auto 76%;background-position:center top}
+.size-finder .finder-shape-step:has(.finder-choices button:nth-child(2).active) .body-guide-legs{background-size:auto 92%;background-position:center top}
+.size-finder .finder-shape-step:has(.finder-choices button:nth-child(3).active) .body-guide-legs{background-size:auto 108%;background-position:center top}
+
+@media(max-width:800px){
+  .social-contact nav{gap:14px}
+  .recently-viewed .railhead{display:block;padding-bottom:28px}
+  .recently-viewed .railhead>button{display:inline-flex;margin-top:18px}
+}
