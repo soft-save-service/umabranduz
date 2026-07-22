@@ -1055,6 +1055,7 @@ details.accordion>p{margin:0 0 18px;line-height:1.6}
 .size-finder .body-guide>i,
 .size-finder .body-guide>b{display:none!important}
 .size-finder .body-guide-waist{background-image:url('/assets/ui/size-waist.svg')}
+.size-finder .body-guide-shoulders{background-image:url('/assets/ui/size-waist.svg');background-position:center top}
 .size-finder .body-guide-hips{background-image:url('/assets/ui/size-hips.svg')}
 .size-finder .body-guide-legs{height:285px;background-image:url('/assets/ui/size-legs.svg')}
 
@@ -1124,4 +1125,62 @@ details.accordion>p{margin:0 0 18px;line-height:1.6}
   .social-contact nav{gap:14px}
   .recently-viewed .railhead{display:block;padding-bottom:28px}
   .recently-viewed .railhead>button{display:inline-flex;margin-top:18px}
+}
+
+/* Exact waist illustrations supplied for UMA's fit finder. */
+.size-finder .finder-shape-step:has(.finder-choices button:nth-child(1).active) .body-guide-waist{background-image:url('/assets/ui/size-waist-slim.png')!important;background-size:contain!important;background-position:center!important;transform:none!important;animation:guide-in-slim .36s ease both}
+.size-finder .finder-shape-step:has(.finder-choices button:nth-child(2).active) .body-guide-waist{background-image:url('/assets/ui/size-waist-average.png')!important;background-size:contain!important;background-position:center!important;transform:none!important;animation:guide-in-average .36s ease both}
+.size-finder .finder-shape-step:has(.finder-choices button:nth-child(3).active) .body-guide-waist{background-image:url('/assets/ui/size-waist-wide.png')!important;background-size:contain!important;background-position:center!important;transform:none!important;animation:guide-in-wide .36s ease both}
+@keyframes guide-in-slim{from{opacity:.25;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+@keyframes guide-in-average{from{opacity:.25;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+@keyframes guide-in-wide{from{opacity:.25;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+
+/* Exact hip illustrations supplied for UMA's fit finder. */
+.size-finder .finder-shape-step:has(.finder-choices button:nth-child(1).active) .body-guide-hips{background-image:url('/assets/ui/size-hips-slim.png')!important;background-size:contain!important;background-position:center!important;transform:none!important;animation:guide-in-slim .36s ease both}
+.size-finder .finder-shape-step:has(.finder-choices button:nth-child(2).active) .body-guide-hips{background-image:url('/assets/ui/size-hips-average.png')!important;background-size:contain!important;background-position:center!important;transform:none!important;animation:guide-in-average .36s ease both}
+.size-finder .finder-shape-step:has(.finder-choices button:nth-child(3).active) .body-guide-hips{background-image:url('/assets/ui/size-hips-wide.png')!important;background-size:contain!important;background-position:center!important;transform:none!important;animation:guide-in-wide .36s ease both}
+
+/* Exact leg-length illustrations supplied for UMA's fit finder. */
+.size-finder .finder-shape-step:has(.finder-choices button:nth-child(1).active) .body-guide-legs{background-image:url('/assets/ui/size-legs-short.png')!important;background-size:contain!important;background-position:center!important;transform:none!important;animation:guide-in-slim .36s ease both}
+.size-finder .finder-shape-step:has(.finder-choices button:nth-child(2).active) .body-guide-legs{background-image:url('/assets/ui/size-legs-average.png')!important;background-size:contain!important;background-position:center!important;transform:none!important;animation:guide-in-average .36s ease both}
+.size-finder .finder-shape-step:has(.finder-choices button:nth-child(3).active) .body-guide-legs{background-image:url('/assets/ui/size-legs-long.png')!important;background-size:contain!important;background-position:center!important;transform:none!important;animation:guide-in-wide .36s ease both}
+
+/* Optional bra-size step in the fit finder. */
+.finder-bra-step{text-align:left}
+.finder-bra-step>small,.finder-bra-step>h2,.finder-bra-step>p{text-align:center}
+.bra-system{display:flex;align-items:center;height:60px;margin:4px 0 30px;padding:0 16px;border:1px solid var(--hairline);border-radius:13px;background:#fbfbfd;font:500 16px var(--ui)}
+.bra-system span{flex:1}
+.bra-system select{border:0;background:transparent;color:transparent;width:24px;outline:0;cursor:pointer}
+.bra-sizes{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.bra-sizes>div>b{display:block;margin-bottom:12px;font:600 13px var(--ui)}
+.bra-sizes>div>div{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.bra-sizes button{height:46px;border:1px solid var(--hairline);border-radius:10px;background:#fff;font:500 15px var(--ui)}
+.bra-sizes button.active{border-color:#050505;background:#050505;color:#fff}
+.finder-bra-step .finder-actions{margin-top:auto;padding-top:30px}
+.finder-fit-step{text-align:left}
+.finder-fit-step>small,.finder-fit-step>h2,.finder-fit-step>p{text-align:center}
+.fit-range{display:block;margin:42px 0 28px}
+.fit-range>b{display:block;margin-bottom:28px;font:600 16px var(--ui)}
+.fit-range input{display:block;width:100%;height:5px;margin:0;appearance:none;border-radius:99px;background:#d9d9dc;accent-color:#111;cursor:pointer}
+.fit-range input::-webkit-slider-thumb{width:30px;height:30px;appearance:none;border:0;border-radius:7px;background:#111;box-shadow:0 2px 5px rgba(0,0,0,.16)}
+.fit-range span{display:grid;grid-template-columns:repeat(3,1fr);margin-top:16px;color:#777;font:500 14px var(--ui)}
+.fit-range i{font-style:normal}
+.fit-range i:nth-child(2){text-align:center}
+.fit-range i:last-child{text-align:right}
+.fit-note-card{margin-top:auto;padding:21px;border-radius:14px;background:#f7f7f8;color:#333;font:500 15px/1.35 var(--ui)}
+.finder-fit-step .finder-actions{margin-top:24px}
+/* Shoulder step uses the supplied body-guide style; its width reacts to the selected option. */
+.size-finder .finder-shape-step:has(.body-guide-shoulders) .finder-choices button:nth-child(1).active~*{}
+.size-finder .finder-shape-step:has(.finder-choices button:nth-child(1).active) .body-guide-shoulders{background-size:auto 84%;animation:guide-in-slim .36s ease both}
+.size-finder .finder-shape-step:has(.finder-choices button:nth-child(2).active) .body-guide-shoulders{background-size:auto 100%;animation:guide-in-average .36s ease both}
+.size-finder .finder-shape-step:has(.finder-choices button:nth-child(3).active) .body-guide-shoulders{background-size:auto 116%;animation:guide-in-wide .36s ease both}
+@media(max-width:600px){
+  .bra-system{height:54px;margin-bottom:22px}
+  .bra-sizes{gap:16px}
+  .bra-sizes>div>div{gap:6px}
+  .bra-sizes button{height:42px}
+  .fit-range{margin:30px 0 22px}
+  .fit-range>b{margin-bottom:23px}
+  .fit-range span{font-size:11px}
+  .fit-note-card{padding:17px;font-size:13px}
 }
