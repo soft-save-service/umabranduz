@@ -48,6 +48,57 @@ const productCopy={
 const productBase=Object.fromEntries(products.map(p=>[p.id,{name:p.name,color:p.color,material:p.material,desc:p.desc}]));
 const productText=(p,key,lang=activeLanguage)=>productCopy[p.id]?.[lang]?.[key]||productBase[p.id]?.[key]||p[key];
 const syncProductLanguage=lang=>products.forEach(p=>Object.assign(p,{name:productText(p,'name',lang),color:productText(p,'color',lang),material:productText(p,'material',lang),desc:productText(p,'desc',lang)}));
+
+// Cart entries are persisted in localStorage.  Their original language must not
+// leak into the current interface after the customer switches locale.
+const productCopyForCurrentLanguage=text=>{
+  const value=String(text||'').trim();
+  if(!value)return null;
+  for(const product of products){
+    const base=productBase[product.id]||{};
+    const copies=productCopy[product.id]||{};
+    for(const key of ['name','color','material','desc']){
+      const variants=[base[key],...Object.values(copies).map(copy=>copy[key])].filter(Boolean);
+      if(variants.includes(value))return productText(product,key,activeLanguage);
+    }
+  }
+  return null;
+};
+const refreshPersistedProductCopy=root=>{
+  if(!root)return;
+  const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+  const nodes=[];
+  while(walker.nextNode())nodes.push(walker.currentNode);
+  nodes.forEach(node=>{
+    const value=node.nodeValue;
+    const trimmed=value.trim();
+    const translated=productCopyForCurrentLanguage(trimmed);
+    if(translated&&translated!==trimmed)node.nodeValue=value.replace(trimmed,translated);
+  });
+  root.querySelectorAll?.('.size-finder .finder-grid label:nth-child(2) select').forEach(select=>{
+    [...select.options].forEach((option,index)=>{
+      option.hidden=index>0;
+      option.disabled=index>0;
+    });
+    if(select.selectedIndex!==0){
+      select.selectedIndex=0;
+      select.dispatchEvent(new Event('change',{bubbles:true}));
+    }
+  });
+};
+if(typeof document!=='undefined'){
+  let refreshQueued=false;
+  const refresh=()=>{
+    if(refreshQueued)return;
+    refreshQueued=true;
+    queueMicrotask(()=>{
+      refreshQueued=false;
+      refreshPersistedProductCopy(document.body);
+    });
+  };
+  new MutationObserver(refresh).observe(document.documentElement,{subtree:true,childList:true,characterData:true});
+  refresh();
+}
 const translations={
   ru:{notice:'Бесплатная доставка от 1 500 000 сум',more:'Подробнее →',menu:'Меню',search:'Поиск',account:'Аккаунт',favourites:'Избранное',bag:'Корзина',home:'Главная страница',about:'О нас',news:'Новости',contacts:'Контакты',services:'Общие услуги',payment:'Оплата',returns:'Возврат',delivery:'Служба доставки',cabinet:'Личный кабинет',orders:'Мои заказы',follow:'Подпишитесь на нас',language:'Регион и язык',country:'Узбекистан',hero:'Тихая сила',heroEm:'женственности',viewCollection:'Смотреть коллекцию',manifest:'МАНИФЕСТ UMA',statement:'Одежда, которая не перекрикивает женщину, а помогает ей звучать.',openCollection:'Открыть коллекцию →',linen:'Лён и хлопок →',evening:'Вечерние образы →',new:'Новинки',all:'Все',filters:'Фильтры и сортировка',items:'товаров',quickAdd:'Быстро добавить',inStock:'В наличии',outOfStock:'Нет в наличии',left:'Осталось',viewAll:'Смотреть всё →',continueShopping:'Продолжить покупки →',recent:'Недавно просмотренные',catalog:'КАТАЛОГ',colour:'Цвет',chooseSize:'Выберите размер',addToBag:'Добавить в корзину',sizeGuide:'Таблица размеров',findSize:'Подобрать размер',related:'Похожие товары'},
   uz:{notice:'1 500 000 soʻmdan bepul yetkazib berish',more:"Batafsil →",menu:'Menyu',search:'Qidiruv',account:'Hisob',favourites:'Sevimlilar',bag:'Savat',home:'Bosh sahifa',about:'Biz haqimizda',news:'Yangiliklar',contacts:'Kontaktlar',services:'Xizmatlar',payment:"Toʻlov",returns:'Qaytarish',delivery:'Yetkazib berish',cabinet:'Shaxsiy kabinet',orders:'Buyurtmalarim',follow:"Bizga obuna boʻling",language:'Hudud va til',country:"Oʻzbekiston",hero:'Nafis kuch',heroEm:'ayollik',viewCollection:"Kolleksiyani ko‘rish",manifest:'UMA MANIFESTI',statement:"Ayolni to‘sib qo‘ymaydigan, balki uning ovozini yanada yorqin qiladigan kiyimlar.",openCollection:"Kolleksiyani ochish →",linen:"Zig‘ir va paxta →",evening:"Kechki obrazlar →",new:'Yangi mahsulotlar',all:'Barchasi',filters:'Filtr va saralash',items:'mahsulot',quickAdd:"Tez qo‘shish",inStock:'Mavjud',outOfStock:'Mavjud emas',left:'Qoldi',viewAll:"Barchasini ko‘rish →",continueShopping:"Xaridni davom ettirish →",recent:"Yaqinda ko‘rilganlar",catalog:'KATALOG',colour:'Rang',chooseSize:'O‘lchamni tanlang',addToBag:"Savatga qo‘shish",sizeGuide:"O‘lchamlar jadvali",findSize:"O‘lchamni tanlash",related:"O‘xshash mahsulotlar"},
@@ -79,6 +130,7 @@ const legacyPhrases={
 };
 function LocalizedInterface({lang}){useEffect(()=>{activeLanguage=lang;syncProductLanguage(lang);const replace=node=>{const value=node.nodeValue,trimmed=value.trim(),key=legacyPhrases[trimmed];if(!key)return;const translated=tr(key);node.nodeValue=value.replace(trimmed,translated)};const apply=root=>{const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);nodes.forEach(replace);root.querySelectorAll?.('[placeholder],[aria-label],[title]').forEach(el=>['placeholder','aria-label','title'].forEach(attr=>{const value=el.getAttribute(attr),key=legacyPhrases[value];if(key)el.setAttribute(attr,tr(key))}))};apply(document.body);const observer=new MutationObserver(records=>records.forEach(record=>record.addedNodes.forEach(node=>{if(node.nodeType===Node.TEXT_NODE)replace(node);else if(node.nodeType===Node.ELEMENT_NODE)apply(node)})));observer.observe(document.body,{subtree:true,childList:true,characterData:true});return()=>observer.disconnect()},[lang]);return null}
 Object.assign(legacyPhrases,{'🇪🇺 Европейские размеры':'euSizes','🇺🇸 Американские размеры':'usSizes','🇦🇺 Австралийские размеры':'auSizes','🇧🇪 Бельгийские размеры':'beSizes','🇬🇧 Британские размеры':'ukSizes','🇫🇷 Французские размеры':'frSizes','🇮🇹 Итальянские размеры':'itSizes','🇪🇸 Испанские размеры':'esSizes'});
+Object.assign(translations.uz,{signOut:'Shaxsiy kabinetdan chiqish'});
 const pageCopy={
   ru:{about:['О бренде','Международная мода с узбекским акцентом!','UMA объединяет искусство и дизайн, черпая вдохновение из культурного наследия Узбекистана. Каждая коллекция рассказывает свою историю.'],delivery:['Доставка','Доставка по Узбекистану','Срок и стоимость отображаются при оформлении. Заказы от 1 500 000 UZS доставляются бесплатно.'],returns:['Возврат','Возврат и обмен','Товар принимается к возврату в течение установленных сроков при сохранении первоначального состояния.'],payment:['Оплата','Удобная оплата','Uzcard, Humo, Visa и Mastercard.'],contact:['КОНТАКТЫ','Мы рядом, когда это нужно.','Поможем с выбором, оформлением заказа, доставкой, возвратом и сотрудничеством.']},
   uz:{about:['BRAND HAQIDA','Oʻzbekona ruhdagi xalqaro moda','UMA sanʼat va dizaynni Oʻzbekiston madaniy merosidan ilhomlanib birlashtiradi. Har bir kolleksiya oʻz hikoyasini soʻzlaydi.'],delivery:['YETKAZIB BERISH',"Oʻzbekiston bo‘ylab yetkazib berish","Muddat va narx buyurtmani rasmiylashtirishda ko‘rsatiladi. 1 500 000 UZS dan yuqori buyurtmalar bepul yetkaziladi."],returns:['QAYTARISH','Qaytarish va almashtirish','Mahsulot belgilangan muddat ichida dastlabki holati saqlangan bo‘lsa, qaytarish uchun qabul qilinadi.'],payment:['TOʻLOV','Qulay toʻlov','Uzcard, Humo, Visa va Mastercard.'],contact:['KONTAKTLAR','Har doim yoningizdamiz','Tanlash, buyurtma, yetkazish, qaytarish va hamkorlik bo‘yicha yordam beramiz.']},
