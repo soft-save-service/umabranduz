@@ -643,14 +643,18 @@ details.accordion>p{margin:0 0 18px;line-height:1.6}
 /* React UI consistency pass. */
 .shop-drawer{width:min(980px,88vw)!important}
 .shop-drawer .shopmenu-top{width:50%;padding:22px 28px;border-bottom:1px solid var(--hairline)}
-.shop-drawer .shopmenu-grid{display:grid;grid-template-columns:minmax(260px,.78fr) minmax(320px,1.22fr);gap:36px;padding:42px 34px 112px}
+.shop-drawer .shopmenu-grid{display:grid;grid-template-columns:minmax(260px,.78fr) minmax(320px,1.22fr);gap:36px;padding:20px 34px 150px}
 .shop-drawer .shopmenu-links{min-width:0}
 .shop-drawer .shopmenu-featured,.shop-drawer .shopmenu-categories{display:flex;flex-direction:column;align-items:stretch}
-.shop-drawer .shopmenu-featured{gap:4px;margin-bottom:32px}
+.shop-drawer .shopmenu-featured{gap:4px;margin-bottom:20px}
+.shopmenu-tabs{display:flex;align-items:flex-end;gap:28px;margin:0 0 18px;border-bottom:1px solid var(--hairline)}
+.shopmenu-tabs button{position:relative;border:0;background:transparent;padding:0 0 12px;color:var(--ink);cursor:pointer;font:500 24px/1.1 var(--serif)}
+.shopmenu-tabs button:after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:transparent}
+.shopmenu-tabs button.active:after{background:currentColor}
 .shop-drawer .shopmenu-featured button,.shop-drawer .shopmenu-categories button{width:100%;border:0;background:transparent;color:var(--ink);text-align:left;cursor:pointer}
 .shop-drawer .shopmenu-featured button{padding:7px 0;font:500 18px/1.35 var(--serif)}
 .shop-drawer .shopmenu-featured span{margin-left:8px;color:#8b8985;font:11px var(--ui)}
-.shop-drawer .shopmenu-categories button{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--hairline);font:500 15px/1.3 var(--ui)}
+.shop-drawer .shopmenu-categories button{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--hairline);font:500 15px/1.3 var(--ui)}
 .shop-drawer .shopmenu-categories i{color:#777;font:400 22px/1 var(--ui);transition:transform .2s}
 .shop-drawer .shopmenu-categories button:hover i{transform:translateX(3px)}
 .shop-drawer .shopmenu-editorial{align-self:start;width:100%;border:0;background:transparent;text-align:left;cursor:pointer}
@@ -661,6 +665,7 @@ details.accordion>p{margin:0 0 18px;line-height:1.6}
 .locale-copy{min-width:0;display:flex;flex-direction:column;gap:2px}
 .locale-copy small{color:#777;font:600 8px/1.2 var(--ui);letter-spacing:.11em;text-transform:uppercase}
 .locale-copy b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:600 12px/1.3 var(--ui)}
+.locale-copy select{width:100%;padding:0;border:0;outline:0;background:transparent;color:var(--ink);font:600 12px/1.3 var(--ui);cursor:pointer}
 .locale-arrow{justify-self:end;font:16px var(--ui);transition:transform .2s}
 
 .orders-page>header{height:auto!important;display:block!important;max-width:760px;padding:0!important;border:0!important;background:transparent!important;margin:0 0 42px!important}
@@ -834,7 +839,9 @@ details.accordion>p{margin:0 0 18px;line-height:1.6}
 @media(max-width:800px){
   .shop-drawer{width:100vw!important}
   .shop-drawer .shopmenu-top{width:100%;padding:14px 16px}
-  .shop-drawer .shopmenu-grid{display:block;padding:26px 18px 112px}
+  .shop-drawer .shopmenu-grid{display:block;padding:4px 18px 112px}
+  .shop-drawer .shopmenu-featured{margin-bottom:20px}
+  .shop-drawer .shopmenu-tabs{margin-bottom:18px}
   .shop-drawer .shopmenu-editorial{display:none}
   .shopmenu-locale{left:16px!important;right:16px;width:auto!important;bottom:16px}
   .orders-page>header h1{font-size:48px}
@@ -1173,6 +1180,10 @@ details.accordion>p{margin:0 0 18px;line-height:1.6}
 .size-finder .finder-shape-step:has(.finder-choices button:nth-child(1).active) .body-guide-shoulders{background-image:url('/assets/ui/size-shoulders-slim.png')!important;background-size:contain!important;background-position:center!important;transform:none!important;animation:guide-in-slim .36s ease both}
 .size-finder .finder-shape-step:has(.finder-choices button:nth-child(2).active) .body-guide-shoulders{background-image:url('/assets/ui/size-shoulders-average.png')!important;background-size:contain!important;background-position:center!important;transform:none!important;animation:guide-in-average .36s ease both}
 .size-finder .finder-shape-step:has(.finder-choices button:nth-child(3).active) .body-guide-shoulders{background-image:url('/assets/ui/size-shoulders-wide.png')!important;background-size:contain!important;background-position:center!important;transform:none!important;animation:guide-in-wide .36s ease both}
+/* Direct classes make the supplied shoulder images switch reliably on mobile Safari too. */
+.size-finder .body-guide-shoulders.guide-1{background-image:url('/assets/ui/size-shoulders-slim.png')!important;background-size:contain!important;background-position:center!important;transform:none!important;animation:guide-in-slim .36s ease both}
+.size-finder .body-guide-shoulders.guide-2{background-image:url('/assets/ui/size-shoulders-average.png')!important;background-size:contain!important;background-position:center!important;transform:none!important;animation:guide-in-average .36s ease both}
+.size-finder .body-guide-shoulders.guide-3{background-image:url('/assets/ui/size-shoulders-wide.png')!important;background-size:contain!important;background-position:center!important;transform:none!important;animation:guide-in-wide .36s ease both}
 @media(max-width:600px){
   .bra-system{height:54px;margin-bottom:22px}
   .bra-sizes{gap:16px}
