@@ -47,58 +47,26 @@ const productCopy={
 };
 const productBase=Object.fromEntries(products.map(p=>[p.id,{name:p.name,color:p.color,material:p.material,desc:p.desc}]));
 const productText=(p,key,lang=activeLanguage)=>productCopy[p.id]?.[lang]?.[key]||productBase[p.id]?.[key]||p[key];
-const syncProductLanguage=lang=>products.forEach(p=>Object.assign(p,{name:productText(p,'name',lang),color:productText(p,'color',lang),material:productText(p,'material',lang),desc:productText(p,'desc',lang)}));
+const localizeCartItems=(items,lang)=>items.map(item=>{const product=products.find(p=>p.id===item.id);return product?{...item,name:productText(product,'name',lang),color:productText(product,'color',lang),material:productText(product,'material',lang),desc:productText(product,'desc',lang)}:item});
+const syncProductLanguage=lang=>{
+  products.forEach(p=>Object.assign(p,{name:productText(p,'name',lang),color:productText(p,'color',lang),material:productText(p,'material',lang),desc:productText(p,'desc',lang)}));
+  const cart=localizeCartItems(read('uma-cart',[]),lang);
+  localStorage.setItem('uma-cart',JSON.stringify(cart));
+  setTimeout(()=>window.dispatchEvent(new CustomEvent('uma-storage',{detail:{key:'uma-cart',value:cart}})),0);
+};
 
-// Cart entries are persisted in localStorage.  Their original language must not
-// leak into the current interface after the customer switches locale.
-const productCopyForCurrentLanguage=text=>{
-  const value=String(text||'').trim();
-  if(!value)return null;
-  for(const product of products){
-    const base=productBase[product.id]||{};
-    const copies=productCopy[product.id]||{};
-    for(const key of ['name','color','material','desc']){
-      const variants=[base[key],...Object.values(copies).map(copy=>copy[key])].filter(Boolean);
-      if(variants.includes(value))return productText(product,key,activeLanguage);
-    }
+// The size assistant currently supports only the women's profile.
+const lockSizeFinderToWomen=root=>root?.querySelectorAll?.('.size-finder .finder-grid label:nth-child(2) select').forEach(select=>{
+  [...select.options].forEach((option,index)=>{
+    option.hidden=index>0;
+    option.disabled=index>0;
+  });
+  if(select.selectedIndex!==0){
+    select.selectedIndex=0;
+    select.dispatchEvent(new Event('change',{bubbles:true}));
   }
-  return null;
-};
-const refreshPersistedProductCopy=root=>{
-  if(!root)return;
-  const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
-  const nodes=[];
-  while(walker.nextNode())nodes.push(walker.currentNode);
-  nodes.forEach(node=>{
-    const value=node.nodeValue;
-    const trimmed=value.trim();
-    const translated=productCopyForCurrentLanguage(trimmed);
-    if(translated&&translated!==trimmed)node.nodeValue=value.replace(trimmed,translated);
-  });
-  root.querySelectorAll?.('.size-finder .finder-grid label:nth-child(2) select').forEach(select=>{
-    [...select.options].forEach((option,index)=>{
-      option.hidden=index>0;
-      option.disabled=index>0;
-    });
-    if(select.selectedIndex!==0){
-      select.selectedIndex=0;
-      select.dispatchEvent(new Event('change',{bubbles:true}));
-    }
-  });
-};
-if(typeof document!=='undefined'){
-  let refreshQueued=false;
-  const refresh=()=>{
-    if(refreshQueued)return;
-    refreshQueued=true;
-    queueMicrotask(()=>{
-      refreshQueued=false;
-      refreshPersistedProductCopy(document.body);
-    });
-  };
-  new MutationObserver(refresh).observe(document.documentElement,{subtree:true,childList:true,characterData:true});
-  refresh();
-}
+});
+if(typeof document!=='undefined')new MutationObserver(()=>lockSizeFinderToWomen(document.body)).observe(document.documentElement,{subtree:true,childList:true});
 const translations={
   ru:{notice:'Бесплатная доставка от 1 500 000 сум',more:'Подробнее →',menu:'Меню',search:'Поиск',account:'Аккаунт',favourites:'Избранное',bag:'Корзина',home:'Главная страница',about:'О нас',news:'Новости',contacts:'Контакты',services:'Общие услуги',payment:'Оплата',returns:'Возврат',delivery:'Служба доставки',cabinet:'Личный кабинет',orders:'Мои заказы',follow:'Подпишитесь на нас',language:'Регион и язык',country:'Узбекистан',hero:'Тихая сила',heroEm:'женственности',viewCollection:'Смотреть коллекцию',manifest:'МАНИФЕСТ UMA',statement:'Одежда, которая не перекрикивает женщину, а помогает ей звучать.',openCollection:'Открыть коллекцию →',linen:'Лён и хлопок →',evening:'Вечерние образы →',new:'Новинки',all:'Все',filters:'Фильтры и сортировка',items:'товаров',quickAdd:'Быстро добавить',inStock:'В наличии',outOfStock:'Нет в наличии',left:'Осталось',viewAll:'Смотреть всё →',continueShopping:'Продолжить покупки →',recent:'Недавно просмотренные',catalog:'КАТАЛОГ',colour:'Цвет',chooseSize:'Выберите размер',addToBag:'Добавить в корзину',sizeGuide:'Таблица размеров',findSize:'Подобрать размер',related:'Похожие товары'},
   uz:{notice:'1 500 000 soʻmdan bepul yetkazib berish',more:"Batafsil →",menu:'Menyu',search:'Qidiruv',account:'Hisob',favourites:'Sevimlilar',bag:'Savat',home:'Bosh sahifa',about:'Biz haqimizda',news:'Yangiliklar',contacts:'Kontaktlar',services:'Xizmatlar',payment:"Toʻlov",returns:'Qaytarish',delivery:'Yetkazib berish',cabinet:'Shaxsiy kabinet',orders:'Buyurtmalarim',follow:"Bizga obuna boʻling",language:'Hudud va til',country:"Oʻzbekiston",hero:'Nafis kuch',heroEm:'ayollik',viewCollection:"Kolleksiyani ko‘rish",manifest:'UMA MANIFESTI',statement:"Ayolni to‘sib qo‘ymaydigan, balki uning ovozini yanada yorqin qiladigan kiyimlar.",openCollection:"Kolleksiyani ochish →",linen:"Zig‘ir va paxta →",evening:"Kechki obrazlar →",new:'Yangi mahsulotlar',all:'Barchasi',filters:'Filtr va saralash',items:'mahsulot',quickAdd:"Tez qo‘shish",inStock:'Mavjud',outOfStock:'Mavjud emas',left:'Qoldi',viewAll:"Barchasini ko‘rish →",continueShopping:"Xaridni davom ettirish →",recent:"Yaqinda ko‘rilganlar",catalog:'KATALOG',colour:'Rang',chooseSize:'O‘lchamni tanlang',addToBag:"Savatga qo‘shish",sizeGuide:"O‘lchamlar jadvali",findSize:"O‘lchamni tanlash",related:"O‘xshash mahsulotlar"},
@@ -140,7 +108,7 @@ const pageCopy={
 function Icon({name}){const paths={menu:<><path d="M4 8h16M4 16h12"/></>,search:<><circle cx="10.8" cy="10.8" r="6.4"/><path d="m16 16 4 4"/></>,user:<><circle cx="12" cy="8" r="3.4"/><path d="M5.5 20c.5-4 2.7-6 6.5-6s6 2 6.5 6"/></>,heart:<path d="M20.8 5.8c-2-2-5.1-2-7.1 0L12 7.5l-1.7-1.7a5 5 0 0 0-7.1 7.1L12 21l8.8-8.1a5 5 0 0 0 0-7.1Z"/>,bag:<><path d="M5.5 8.5h13l-1 12h-11l-1-12Z"/><path d="M9 9V6.5a3 3 0 0 1 6 0V9"/></>,close:<path d="m5 5 14 14M19 5 5 19"/>,plus:<path d="M12 5v14M5 12h14"/>};return <svg className="ui-icon" viewBox="0 0 24 24" aria-hidden="true">{paths[name]}</svg>}
 
 function useRoute(){const get=()=>location.hash.slice(1)||'/';const [route,setRoute]=useState(get);useEffect(()=>{const fn=()=>setRoute(get());addEventListener('hashchange',fn);return()=>removeEventListener('hashchange',fn)},[]);return route}
-function useStoredState(key,initial){const [value,setValue]=useState(()=>read(key,initial));useEffect(()=>localStorage.setItem(key,JSON.stringify(value)),[key,value]);return[value,setValue]}
+function useStoredState(key,initial){const [value,setValue]=useState(()=>read(key,initial));useEffect(()=>localStorage.setItem(key,JSON.stringify(value)),[key,value]);useEffect(()=>{const sync=event=>{if(event.detail?.key===key)setValue(event.detail.value)};window.addEventListener('uma-storage',sync);return()=>window.removeEventListener('uma-storage',sync)},[key]);return[value,setValue]}
 
 const salePercent=p=>p.sale&&p.oldPrice?Math.round((1-p.price/p.oldPrice)*100):0;
 function SalePrice({p,compact=false}){return p.sale&&p.oldPrice?<span className={`sale-price ${compact?'compact':''}`}><span className="sale-price-row"><em>{money(p.price)}</em><del>{money(p.oldPrice)}</del></span>{!compact&&<small>{tr('sale')} −{salePercent(p)}%</small>}</span>:<span>{money(p.price)}</span>}
